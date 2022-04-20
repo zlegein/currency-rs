@@ -9,13 +9,13 @@ fn index() -> &'static str {
 
 #[launch]
 fn rocket() -> _ {
-    rocket::build().mount("/rates", routes![rates])
+    rocket::build().mount("/", routes![index, rates])
 }
 
 #[derive(Serialize)]
 struct Rates { foo: String }
 
-#[get("/rates", format="json")]
+#[get("/rates")]
 fn rates() -> Json<Rates> {
     Json(Rates { foo: "bar".to_string() })
 }
