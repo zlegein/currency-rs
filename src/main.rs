@@ -1,6 +1,6 @@
 #[macro_use] extern crate rocket;
-use rocket::serde::Serialize;
-use rocket::serde::json::Json;
+use rocket::serde::json::{ json, Value };
+
 
 #[get("/")]
 fn index() -> &'static str {
@@ -12,10 +12,8 @@ fn rocket() -> _ {
     rocket::build().mount("/", routes![index, rates])
 }
 
-#[derive(Serialize)]
-struct Rates { foo: String }
-
 #[get("/rates")]
-fn rates() -> Json<Rates> {
-    Json(Rates { foo: "bar".to_string() })
-}
+fn rates() -> Value {
+    let result = std::fs::read_to_string("./static/currency.json").expect("unable to read file");
+    json!(result)
+}  
