@@ -1,0 +1,22 @@
+- intro
+  - what is rust? - milan
+  - where is it used? (microsoft, mozilla, aws, cloudflare)
+  - why rust? - milan
+    - memory safety
+    - multi-threading
+    - no garbage collector
+- Demo - zach
+  - project overview
+  - macros, serde, rocket - tyler
+  - option, result, null doesn't exist - milan
+  - repo url ()
+- retro  - alan 
+  - steep learning curve
+  - extensive built-in testing
+  - weeping
+- rust eco-system - tyler
+    - great documentation (rustlings, docs.rs, rust book)
+    - cargo, crates (crates.io)  
+    - arewewebyet
+    - rust in action book
+- QA
