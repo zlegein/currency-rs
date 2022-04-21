@@ -75,8 +75,7 @@ fn convert(input: Json<Input<'_>>) -> Json<ConvertResponse> {
     let money = rate.convert(amount); 
     match money {
         Ok(result) => return Json(ConvertResponse{code: rate_code.to_string(), amount: result.to_string()  }),
-        Err(err) => println!("Could not convert {}", err)
+        Err(err) => panic!("Could not convert {}", err)
     }
-    Json(ConvertResponse{code: "USD".to_string(), amount: "1.0".to_string()  })
     
 }
