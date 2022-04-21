@@ -2,6 +2,7 @@
 use rocket::serde::json::{ json, Value, Json };
 use rocket::serde::{ Deserialize, Serialize };
 use std::collections::HashMap;
+use rocket::form::Form;
 
 #[get("/")]
 fn index() -> &'static str {
@@ -10,7 +11,7 @@ fn index() -> &'static str {
 
 #[launch]
 fn rocket() -> _ {
-    rocket::build().mount("/", routes![index, rates, rate])
+    rocket::build().mount("/", routes![index, rates, rate, convert])
 }
 
 #[get("/rates")]
@@ -21,19 +22,32 @@ fn rates() -> Value {
 
 #[derive(Default, Debug, Clone, PartialEq, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
-pub struct Data {
-    pub disclaimer: String,
-    pub license: String,
-    pub timestamp: i64,
-    pub base: String,
-    pub rates: HashMap<String, f32>,
+struct Data {
+    disclaimer: String,
+    license: String,
+    timestamp: i64,
+    base: String,
+    rates: HashMap<String, f32>,
 }
 
 #[derive(Default, Debug, Clone, PartialEq, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
-pub struct Rate {
+struct Rate {
+    code: String,
+    factor: f32,
+}
+
+#[derive(FromForm)]
+struct Input {
+    code: String,
+    amount: f32
+}
+
+#[derive(Default, Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct ConvertResponse {
     pub code: String,
-    pub factor: f32,
+    amount: f32
 }
 
 #[get("/rate/<code>")]
@@ -46,4 +60,15 @@ fn rate(code: String) -> Json<Rate> {
     }
     let value: f32 = 1.0;
     Json(Rate{code: "USD".to_string(), factor: value  })
+}
+
+#[post("/convert", data="<input>", format="application/json")]
+fn convert(input: Form<Input>) -> Json<ConvertResponse> {
+    let result = std::fs::read_to_string("./static/currency.json").expect("unable to read file");
+    let data: Data = rocket::serde::json::from_str(&result).unwrap(); 
+    let rate_option = data.rates.get(&input.code);
+    if let Some(factor) = rate_option { 
+        return Json(ConvertResponse{ code: input.code.clone(), amount: factor * input.amount })
+    }
+    Json(ConvertResponse{code: "USD".to_string(), amount: input.amount  })
 }
