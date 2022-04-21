@@ -139,6 +139,8 @@ name = "curreny-rs"
 version = "0.1.0"
 dependencies = [
  "rocket",
+ "rust_decimal",
+ "rust_decimal_macros",
  "rusty-money",
  "serde",
 ]
