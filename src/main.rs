@@ -20,7 +20,8 @@ fn rocket() -> _ {
 #[get("/rates")]
 fn rates() -> Value {
     let result = std::fs::read_to_string("./static/currency.json").expect("unable to read file");
-    json!(result)
+    let data: Data = rocket::serde::json::from_str(&result).unwrap(); 
+    json!(data.rates)
 }  
 
 #[derive(Default, Debug, Clone, PartialEq, Serialize, Deserialize)]
@@ -40,7 +41,7 @@ struct Rate {
     factor: f32,
 }
 
-#[derive(Deserialize)]
+#[derive(Deserialize)] 
 struct Input<'r> {
     code: &'r str,
     amount: f32

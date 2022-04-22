@@ -9,7 +9,7 @@
   - project overview
   - macros, serde, rocket - tyler
   - option, result, null doesn't exist - milan
-  - repo url ()
+  - repo url (https://github.com/zlegein/currency-rs)
 - retro  - alan 
   - steep learning curve
   - extensive built-in testing
